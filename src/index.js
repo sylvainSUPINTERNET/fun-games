@@ -12,7 +12,10 @@ let clock;
 let action2, action,footManRun;
 let footSwordAttack1, footSwordAttack2;
 
+let footMan;
+
 let isRunning = false;
+let moveToDirection = false;
 
 
 const gLoader = new GLTFLoader();
@@ -65,7 +68,7 @@ const init = async () => {
     scene.add (elephantBabyScene.scene);
 
 
-    const footMan = await loadModel(modelPath);
+    footMan = await loadModel(modelPath);
     console.log(footMan);
     footMan.scene.position.x = 0;
     footMan.scene.position.y = -1;
@@ -110,6 +113,25 @@ document.addEventListener("keydown", event => {
     let { key } = event;
     if ( key === gameSettingsMoves.forwardKey && isRunning === false) {
         isRunning = true;
+        moveToDirection = "forward";
+        footManRun.play();
+    }
+
+    if ( key === gameSettingsMoves.leftKey && isRunning === false) {
+        isRunning = true;
+        moveToDirection = "left";
+        footManRun.play();
+    }
+
+    if ( key === gameSettingsMoves.rightKey && isRunning === false) {
+        isRunning = true;
+        moveToDirection = "right";
+        footManRun.play();
+    }
+
+    if ( key === gameSettingsMoves.backKey && isRunning === false) {
+        isRunning = true;
+        moveToDirection = "back";
         footManRun.play();
     }
 });
@@ -121,15 +143,30 @@ document.addEventListener("keyup", event => {
         footManRun.stop();
         action.play();
     }
+    if ( key === gameSettingsMoves.leftKey && isRunning === true) {
+        isRunning = false;
+        footManRun.stop();
+        action.play();
+    }
+    if ( key === gameSettingsMoves.rightKey && isRunning === true) {
+        isRunning = false;
+        footManRun.stop();
+        action.play();
+    }
+    if ( key === gameSettingsMoves.backKey && isRunning === true) {
+        isRunning = false;
+        footManRun.stop();
+        action.play();
+    }
 });
 
-document.onclick = () => {
 
+// TODO is broken !
+document.onclick = () => {
     footSwordAttack2.setLoop( THREE.LoopOnce );
     if ( !footSwordAttack2.isRunning() ) {
         footSwordAttack2.play()
     }
-
 }
 
 /*
@@ -153,6 +190,22 @@ function animate( time ) {
 
     mesh.rotation.x = time / 2000;
     mesh.rotation.y = time / 1000;
+
+
+    if ( isRunning ) {
+        if ( moveToDirection === "forward" ) {
+            footMan.scene.position.z += gameSettingsMoves.defaultSpeedMoveForward;
+        }
+        if ( moveToDirection === "back" ) {
+            footMan.scene.position.z -= gameSettingsMoves.defaultSpeedMoveBack;
+        }
+        if ( moveToDirection === "left" ) {
+            footMan.scene.position.x += gameSettingsMoves.defaultSpeedMoveBack;
+        }
+        if ( moveToDirection === "right" ) {
+            footMan.scene.position.x -= gameSettingsMoves.defaultSpeedMoveBack;
+        }
+    }
 
     renderer.render( scene, camera );
 
