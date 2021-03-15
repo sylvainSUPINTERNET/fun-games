@@ -195,9 +195,17 @@ function animate( time ) {
     if ( isRunning ) {
         if ( moveToDirection === "forward" ) {
             footMan.scene.position.z += gameSettingsMoves.defaultSpeedMoveForward;
+            //camera.position.set( 0, 1.2, -4 );
+            //console.log(camera.getWorldDirection())
+            camera.lookAt(new THREE.Vector3(footMan.scene.position.x,footMan.scene.position.y,footMan.scene.position.z))
+            //camera.translateX( - 0.03 );
+            camera.translateZ( - 0.03 );
+            //controls.update();
         }
         if ( moveToDirection === "back" ) {
             footMan.scene.position.z -= gameSettingsMoves.defaultSpeedMoveBack;
+            camera.lookAt(new THREE.Vector3(footMan.scene.position.x,footMan.scene.position.y,footMan.scene.position.z))
+            camera.translateZ(0.03 );
         }
         if ( moveToDirection === "left" ) {
             footMan.scene.position.x += gameSettingsMoves.defaultSpeedMoveBack;
@@ -206,6 +214,8 @@ function animate( time ) {
             footMan.scene.position.x -= gameSettingsMoves.defaultSpeedMoveBack;
         }
     }
+
+
 
     renderer.render( scene, camera );
 
